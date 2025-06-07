@@ -30,6 +30,8 @@ export const registerUser = async (
       password,
     });
 
+    console.log("registrando...");
+
     if (!data) {
       return {
         data: null,
@@ -42,6 +44,8 @@ export const registerUser = async (
         success: false,
       };
     }
+
+    console.log("registrado con exito...", data.user);
 
     return {
       data: data.user,

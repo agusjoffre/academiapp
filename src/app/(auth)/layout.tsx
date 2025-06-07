@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -13,15 +13,13 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div className="sm:py-7 flex sm:items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-primary sm:text-3xl">
-            <Link className="cursor-pointer" href={"/"}>
-              Academiapp
-            </Link>
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+        <div className="text-center flex flex-col gap-5 justify-center items-center">
+          <Link className="cursor-pointer inline-block" href={"/"}>
+            <Logo size="xxl" />
+          </Link>
+          <p className="text-sm text-muted-foreground sm:text-xl font-serif">
             Tu plataforma para organizar tu vida académica
           </p>
         </div>

@@ -41,6 +41,7 @@ type AuthFormData = z.infer<typeof loginSchema> & {
 
 const AuthForm = ({ type, onSubmit, isLoading = false }: AuthFormProps) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
   const form = useForm<AuthFormData>({
     resolver: zodResolver(type === "login" ? loginSchema : registerSchema),
@@ -53,10 +54,14 @@ const AuthForm = ({ type, onSubmit, isLoading = false }: AuthFormProps) => {
 
   const handleSubmit = async (data: AuthFormData) => {
     try {
+      setError(null);
       await onSubmit(data);
       setIsSuccess(true);
     } catch (error) {
-      console.error(error);
+      setError(
+        error instanceof Error ? error.message : "Ocurrió un error inesperado"
+      );
+      setIsSuccess(false);
     }
   };
 
@@ -79,6 +84,12 @@ const AuthForm = ({ type, onSubmit, isLoading = false }: AuthFormProps) => {
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-4 sm:space-y-6"
       >
+        {error && (
+          <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 rounded-md">
+            {error}
+          </div>
+        )}
+
         <FormField
           control={form.control}
           name="email"

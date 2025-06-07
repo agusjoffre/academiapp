@@ -30,30 +30,55 @@ export const loginUser = async (
       password,
     });
 
-    if (!data) {
+    if (error) {
+      // Manejar errores específicos de Supabase
+      let errorMessage = "Error al iniciar sesión";
+
+      if (error.message.includes("Invalid login credentials")) {
+        errorMessage = "Email o contraseña incorrectos";
+      } else if (error.message.includes("Email not confirmed")) {
+        errorMessage = "Por favor confirma tu email antes de iniciar sesión";
+      } else if (error.message.includes("User not found")) {
+        errorMessage = "No existe una cuenta con este email";
+      }
+
       return {
         data: null,
         error: {
-          message:
-            error?.message || "An unknown error occurred. Data not found.",
-          code: error?.code,
+          message: errorMessage,
+          code: error.code,
         },
-        status: error?.status || 500,
+        status: error.status || 400,
         success: false,
       };
     }
+
+    if (!data.user) {
+      return {
+        data: null,
+        error: {
+          message: "No se pudo obtener la información del usuario",
+          code: "USER_NOT_FOUND",
+        },
+        status: 404,
+        success: false,
+      };
+    }
+
     return {
       data: data.user,
       status: 200,
       success: true,
-      message: "User logged in successfully",
+      message: "Usuario autenticado exitosamente",
     };
   } catch (error) {
     return {
       data: null,
       error: {
         message:
-          error instanceof Error ? error.message : "An unknown error occurred",
+          error instanceof Error
+            ? error.message
+            : "Error inesperado al iniciar sesión",
         code: "UNKNOWN_ERROR",
       },
       status: 500,

@@ -21,12 +21,14 @@ const LoginPage = () => {
       if (response.success) {
         router.push("/");
       } else {
-        setErrorMessage(response.error?.message || "An error occurred");
-        setIsErrorOpen(true);
+        throw new Error(response.error?.message || "Error al iniciar sesión");
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred");
+      const message =
+        error instanceof Error ? error.message : "Error al iniciar sesión";
+      setErrorMessage(message);
       setIsErrorOpen(true);
+      throw error; // Re-throw para que el AuthForm lo maneje
     } finally {
       setIsLoading(false);
     }
